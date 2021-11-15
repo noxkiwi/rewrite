@@ -1,0 +1,33 @@
+{
+  "name": "noxkiwi/rewrite",
+  "description": "I rewrite Urls.",
+  "version": "1.0.0",
+  "type": "package",
+  "license": "proprietary",
+  "keywords": [
+    "URL",
+    "URI",
+    "Rewrite"
+  ],
+  "homepage": "https://nox.kiwi/",
+  "time": "2016-01-05",
+  "authors": [
+    {
+      "name": "Jan Nox",
+      "email": "jan.nox@pm.me",
+      "homepage": "https://nox.kiwi",
+      "role": "Lead Developer"
+    }
+  ],
+  "require": {
+    "php": ">=8.0.0",
+    "noxkiwi/core": "*",
+    "noxkiwi/cache": "*",
+    "noxkiwi/singleton": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "noxkiwi\\rewrite\\": "backend/class/"
+    }
+  }
+}
