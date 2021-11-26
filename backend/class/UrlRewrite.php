@@ -7,6 +7,9 @@ use noxkiwi\core\ErrorHandler;
 use noxkiwi\rewrite\Interfaces\UrlRewriteInterface;
 use noxkiwi\singleton\Singleton;
 use function is_array;
+use function str_replace;
+use function strtolower;
+use function urldecode;
 use const E_USER_NOTICE;
 
 /**
