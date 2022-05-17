@@ -16,8 +16,8 @@ use noxkiwi\singleton\Exception\SingletonException;
  * @package      noxkiwi\rewrite\UrlRewrite
  * @author       Jan Nox <jan.nox@pm.me>
  * @license      https://nox.kiwi/license
- * @copyright    2020 noxkiwi
- * @version      1.0.0
+ * @copyright    2020 - 2022 noxkiwi
+ * @version      1.0.1
  * @link         https://nox.kiwi/
  */
 final class JsonUrlrewrite extends UrlRewrite
@@ -60,15 +60,13 @@ final class JsonUrlrewrite extends UrlRewrite
     protected function doGetRewrite(string $readable): array
     {
         $redirects = new JsonConfig(self::CONFIG_URLREWRITE, true);
-        if ($redirects->exists($readable)) {
-            try {
-                return JsonHelper::decodeStringToArray($redirects->get($readable));
-            } catch (InvalidJsonException $exception) {
-                ErrorHandler::handleException($exception);
-            }
-        }
+        try {
+            return JsonHelper::decodeStringToArray((string)$redirects->get($readable, ''));
+        } catch (InvalidJsonException $exception) {
+            ErrorHandler::handleException($exception);
 
-        return [];
+            return [];
+        }
     }
 
     /**
@@ -79,14 +77,14 @@ final class JsonUrlrewrite extends UrlRewrite
      */
     private function loadConf(): array
     {
-        $filePath = Path::getHomeDir() . self::CONFIG_URLREWRITE;
+        $path = self::getPath();
         try {
-            if (! Filesystem::getInstance()->fileAvailable($filePath)) {
+            if (! Filesystem::getInstance()->fileAvailable($path)) {
                 return [];
             }
 
-            return JsonHelper::decodeFileToArray($filePath);
-        } catch (InvalidJsonException | SingletonException $exception) {
+            return JsonHelper::decodeFileToArray($path);
+        } catch (InvalidJsonException|SingletonException $exception) {
             ErrorHandler::handleException($exception);
 
             return [];
@@ -102,7 +100,7 @@ final class JsonUrlrewrite extends UrlRewrite
      */
     private function saveConf(array $configuration): bool
     {
-        $path = Path::getHomeDir() . self::CONFIG_URLREWRITE;
+        $path = self::getPath();
         try {
             Filesystem::getInstance()->fileDelete($path);
 
@@ -110,5 +108,14 @@ final class JsonUrlrewrite extends UrlRewrite
         } catch (SingletonException) {
             return false;
         }
+    }
+
+    /**
+     * I will solely return the path to the real configuration file.
+     * @return string
+     */
+    private static function getPath(): string
+    {
+        return Path::getInheritedPath(self::CONFIG_URLREWRITE);
     }
 }
